@@ -1,10 +1,10 @@
 const express = require("express");
 const cloudinary = require("../utils/cloudinary");
 const { Product } = require("../models/product");
-
 const router = express.Router();
 
 const multer = require("multer");
+const { isAdmin } = require("../middleware/auth");
 
 //CREATE
 
@@ -12,7 +12,7 @@ const multer = require("multer");
 const upload = multer({ limits: { fileSize: 50 * 1024 * 1024 } }); // 50MB limit
 
 // router.post("/", upload.single("file"), async (req, res) => {
-router.post("/", async (req, res) => {
+router.post("/", isAdmin, async (req, res) => {
   const { name, brand, desc, price, image } = req.body;
   // console.log("TG", req.body);
   try {
