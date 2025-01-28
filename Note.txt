@@ -1,0 +1,24 @@
+https://www.youtube.com/watch?v=Jk2vzGFvoak&list=PL63c_Ws9ecIRnNHCSqmIzfsMAYZrN71L6&index=3
+Installed react router
+Installed Simple React Snippet extention
+- to create shortcut for react function type sfc
+Installed Redux devtool chrom extension
+Installed Redux toolkit and axios
+Create a AsyncThank
+RTK Query
+Installed react toastify
+
+Installed mongoose and dotenv  --- npm i mongoose dotenv
+npm i jsonwebtoken bcrypt joi
+npm i jwt-decode
+npm i styled-components
+install extention vscode-styled-components
+npm i cloudinary
+
+
+
+
+https://betterstack.com/community/questions/fix-request-entity-too-large/
+
+
+https://jasonwatmore.com/redux-toolkit-fix-the-object-notation-for-createslice-extrareducers-is-deprecated-in-react
