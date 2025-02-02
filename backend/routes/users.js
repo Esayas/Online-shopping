@@ -4,6 +4,47 @@ const moment = require("moment");
 
 const router = require("express").Router();
 
+// GET ALL USERS
+
+router.get("/", isAdmin, async (req, res) => {
+  try {
+    const users = await User.find().sort({ _id: -1 });
+    res.status(200).send(users);
+  } catch (err) {
+    // console.log(err);
+    res.status(500).send(err);
+  }
+});
+
+//DELETE
+
+router.delete("/:id", isAdmin, async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+
+    res.status(200).send(deletedUser);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+// GET USERS
+
+router.get("/", isAdmin, async (req, res) => {
+  const query = req.query.new;
+
+  try {
+    const users = query
+      ? await User.find().sort({ _id: -1 }).limit(4)
+      : await User.find().sort({ _id: -1 });
+
+    res.status(200).send(users);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+});
+
 //GET USER STATS
 
 router.get("/stats", isAdmin, async (req, res) => {
