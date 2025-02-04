@@ -1,6 +1,7 @@
 const { User } = require("../models/user");
 const { auth, isUser, isAdmin } = require("../middleware/auth");
 const moment = require("moment");
+const bcrypt = require("bcrypt");
 
 const router = require("express").Router();
 
@@ -29,16 +30,16 @@ router.delete("/:id", isAdmin, async (req, res) => {
 });
 
 // GET USERS
-
-router.get("/", isAdmin, async (req, res) => {
-  const query = req.query.new;
-
+router.get("/find/:id", async (req, res) => {
   try {
-    const users = query
-      ? await User.find().sort({ _id: -1 }).limit(4)
-      : await User.find().sort({ _id: -1 });
+    const user = await User.findById(req.params.id);
 
-    res.status(200).send(users);
+    res.status(200).send({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
@@ -71,6 +72,47 @@ router.get("/stats", isAdmin, async (req, res) => {
     res.status(200).send(users);
   } catch (err) {
     console.log(err);
+    res.status(500).send(err);
+  }
+});
+
+//UPDATE USER
+
+router.put("/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!(user.email === req.body.email)) {
+      const emailInUse = await User.findOne({ email: req.body.email });
+      if (emailInUse)
+        return res.status(400).send("That email is already taken...");
+    }
+
+    if (req.body.password && user) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+      user.password = hashedPassword;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        email: req.body.email,
+        isAdmin: req.body.isAdmin,
+        password: user.password,
+      },
+      { new: true }
+    );
+
+    res.status(200).send({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } catch (err) {
     res.status(500).send(err);
   }
 });
